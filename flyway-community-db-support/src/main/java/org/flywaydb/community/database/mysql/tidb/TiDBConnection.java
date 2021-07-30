@@ -49,4 +49,22 @@ public class TiDBConnection extends MySQLConnection {
 
     @Override
     protected boolean canUseNamedLockTemplate() { return false; }
+
+    @Override
+    public int getIntVariableValue(String varName)  {
+        try {
+            return jdbcTemplate.queryForInt("SELECT @@" + varName);
+        } catch (SQLException ex) {
+            try {
+                String res = jdbcTemplate.queryForString("SELECT @@" + varName);
+                if (res.contains("OFF")) {
+                    return 0;
+                } else {
+                    return 1;
+                }
+            } catch (SQLException e) {
+                throw new FlywaySqlException("Unable to determine value for '" + varName + "' variable", e);
+            }
+        }
+    }
 }

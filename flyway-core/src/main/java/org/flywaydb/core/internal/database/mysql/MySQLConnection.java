@@ -54,7 +54,7 @@ public class MySQLConnection extends Connection<MySQLDatabase> {
         originalSqlSafeUpdates = getIntVariableValue(SQL_SAFE_UPDATES);
     }
 
-    private int getIntVariableValue(String varName) {
+    public int getIntVariableValue(String varName) {
         try {
             return jdbcTemplate.queryForInt("SELECT @@" + varName);
         } catch (SQLException e) {
